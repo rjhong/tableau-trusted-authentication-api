@@ -9,7 +9,10 @@ router.use("/", (req, res, next) => {
 
 router.get("/trusted_url", (req, res) => {
     let ta_option = {
-        user_name : req.query.user_name
+        user_name : req.query.user_name,
+        target_site : req.query.target_site,
+        workbook : req.query.workbook,
+        sheet : req.query.sheet
     };
     ta.getTrustedURL(ta_option)
     .then(value => {

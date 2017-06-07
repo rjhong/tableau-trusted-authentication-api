@@ -21,11 +21,29 @@ First, you need to have **Tableau Server**, then get some setup on **Tableau Ser
 ```cmd
 cd /to_project_directory/
 npm install
+```
+Then, configure something in the file  ```./bin/global_vars.js``` :
+```javascript
+exports.tableau_server = {
+    //Tableau Server's public ip, it will used when client visit Tableau Server. 
+    public_ip : "59.124.53.68",
+    //privat ip, used when transaction between web server and tableau server
+    private_ip : "192.168.0.206",
+    //port that Tableau Server use.
+    port : "80"
+}
+``` 
+After those setting, run this :
+```
 node app.js
 ```
-You will see the following output.
+You will see the following output :
 
 ```
 Listening at port : 8080
 ```
-    
+
+## Testing
+
+Not yet done...
+
