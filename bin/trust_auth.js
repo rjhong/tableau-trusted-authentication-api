@@ -30,7 +30,9 @@ exports.getTrustedURL = (ta_options) => {
     return new Promise((resolve, reject) => {
         getTrustedTicket(ta_options.user_name, ta_options.target_site)
         .then(ticket => {
-            let url = global_vars.tableau_server.public_ip;
+            let url = global_vars.tableau_server.protocol + "://"
+             + global_vars.tableau_server.public_ip + ":" 
+             + global_vars.tableau_server.port;
             let ticket_path = "/trusted/" + ticket;  
             let site_path = "/t/" + ta_options.target_site;
             let view_path = "/views/" + ta_options.workbook + "/" + ta_options.sheet;

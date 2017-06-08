@@ -4,8 +4,21 @@
         <title>Test Page</title>
     </head>
     <body>
+        
+        <h2><div id = "countdown_holder"></div></h2>
+        <h3><a href="<%= url %>"><%= url %></a></h3>
         <script>
-            window.location = "http://<%= url %>";
-        </script>
+        let i = 5;
+        let id = setInterval( () => {            
+            document.getElementById("countdown_holder").innerHTML = "Will redirect to this URL at " + i + " secs.";
+            i-=1;
+            if(i<0){
+                clearInterval(id);
+                window.location = "<%= url %>"
+            }
+        },1000);
+        
+        
+        </script>        
     </body>
 </html>

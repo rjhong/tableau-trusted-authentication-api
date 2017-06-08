@@ -13,7 +13,6 @@ app.set('view engine', 'ejs');
 
 //routes setup
 const api = require('./routes/api');
-const test = require('./routes/test');
 
 //common middlewares setup
 app.use(morgan('dev'));
@@ -22,8 +21,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+    req.path.includes("/api") ? next(): res.sendFile(__dirname + "/README.md");
+});
 app.use('/api', api);
-app.use('/test',test);
 
 
 const port = process.env.PORT || 8080;

@@ -11,7 +11,7 @@ This work is to modularize the [Trusted Authentication](https://onlinehelp.table
 
 ## Begin works
 
-First, you need to have **Tableau Server**, then get some setup on **Tableau Server** side, like tell **Tableau Server** to trusted your **Web Server** ...etc.
+First, you need to have a **Tableau Server**, then get some setup on **Tableau Server** side. eg: tell **Tableau Server** to trusted your **Web Server** ...etc.
 > Please follow [this step](https://onlinehelp.tableau.com/current/server/en-us/trusted_auth_trustIP.htm) to do so.
 
 ##  How to use **tableau_trusted_authentication_api**
@@ -26,9 +26,9 @@ Then, configure something in the file  ```./bin/global_vars.js``` :
 ```javascript
 exports.tableau_server = {
     //Tableau Server's public ip, it will used when client visit Tableau Server. 
-    public_ip : "59.124.53.68",
+    public_ip : "xx.xx.xx.xx",
     //privat ip, used when transaction between web server and tableau server
-    private_ip : "192.168.0.206",
+    private_ip : "192.168.xx.xx",
     //port that Tableau Server use.
     port : "80"
 }
