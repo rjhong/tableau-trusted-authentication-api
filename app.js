@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-    req.path.includes("/api") ? next(): res.sendFile(__dirname + "/README.md");
+    req.path.includes("/api") ? next(): res.send("<h1>Welcom to trusted_authentication_api!</h1>");
 });
 app.use('/api', api);
 
