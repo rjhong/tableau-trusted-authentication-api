@@ -41,7 +41,9 @@ exports.tableau_server = {
     //privat ip, used when transaction between web server and tableau server
     private_ip : "192.168.xx.xx",
     //port that Tableau Server use.
-    port : "80"
+    port : "443",
+    //using SSL/TSL or not.
+    protocol : "https"
 }
 ``` 
 After those setting, run this :
@@ -74,6 +76,6 @@ Use [localhost:8080](localhost:8080) to visit the Web Service , then use
 ## How to use
 
 Enter this:
-<br>[localhost:8080/api/trusted_ticket?user_name=lisa&target_site=sales_department&workbook=monthly_report&sheet=what_if_analysis](localhost:8080/api/test?user_name=lisa&target_site=sales_department&workbook=monthly_report&sheet=what_if_analysis)
+<br>[localhost:8080/api/trusted_url?user_name=lisa&target_site=sales_department&workbook=monthly_report&sheet=what_if_analysis](localhost:8080/api/test?user_name=lisa&target_site=sales_department&workbook=monthly_report&sheet=what_if_analysis)
 <br> you will recieve an URL like below :[http://xx.xx.xx.xx:80/trusted/kWehOMTrQCKbTGgcXgzYiw==:D4UobMU-stIncFvTqlXFmkK9]()
 use this URL to visit **Tableau Server**.

@@ -1,7 +1,9 @@
-const http = require("http");
+const gv = require('./global_vars');
+let protocol = (gv.tableau_server.protocol == 'https' ? require('https') : require('http'));
+
 exports.requestPromise = (req_options, req_body) => {
     return new Promise((resolve, reject) => {
-        const req = http.request(req_options, res => {
+        const req = protocol.request(req_options, res => {
             res.setEncoding("UTF-8");
             let data = [];
             res.on("data",chunk => data.push(chunk));
