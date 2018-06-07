@@ -36,12 +36,12 @@ exports.getTrustedURL = (ta_options) => {
             let ticket_path = "/trusted/" + ticket;  
             let site_path = "/t/" + ta_options.target_site;
             let view_path = "/views/" + ta_options.workbook + "/" + ta_options.sheet;
-            if(ticket == -1) reject(new Error("invalid ticket, plz check again."));
             url += ticket_path;
             if(ta_options.target_site != null && ta_options.target_site != "Default") url += site_path;
             if(ta_options.workbook == null || ta_options.sheet == null) resolve(url);
             url += view_path;
             resolve(url);
-        });
+        })
+        .catch(reason => reject(reason));
     });    
 };

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <% include ../public/htmls/default_setting.html %>
+  <link rel="stylesheet" type="text/css" href="stylesheets/home.css">
+  <script type="text/javascript" src="javascripts/home.js"></script>
+</head>
+<body class='bg-light'>
+
+  <div class='container'>
+
+    <div class='text-center'>
+      <img src='../images/tableau_logo.png' width="200">
+      <h2>Tableau Trusted Authentication API</h2>
+      <p class='text-left'>Trusted Authentication is a Single-Sign-On method for us to retrieve views (we call them viz) from Tableau Server to our Web Server using HTTP/HTTPS protocols to do so. Whatever your Web Server is build by which programming languages, as long as you can use it to access HTTP/HTTPS protocols you can do Trusted Authentication. In this case I use Node.js to approach.</p>
+    </div>    
+    <hr class="mb-4">
+    
+    <!-- Configuration Area-->
+    <div class="bg-white rounded border">
+      <div class="bg-light px-2 pt-2 rounded border-bottom">
+        <h4>Configuration</h4>
+      </div>
+      <div class="p-4">
+        <strong>Tableau Server @private_ip : </strong>
+        <p>Private ip or host name is used when web server retrieving ticket from Tableau Server. therefore, I suggested that your web server need to be able to access Tableau Server using private ip/hostname. Of course private_ip and public ip could set to the same, but it not what i will suggest.</p>
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Tableau server private ip/hostname:</span>
+            <button class="btn btn-outline-secondary" name="protocol_btn" id="protocol_btn" value="<%= protocol %>" onclick="change_protocol()"><%= protocol %>://</button>      
+          </div>
+          <input type="text" class="form-control" placeholder="ex : tableau.example or 192.168.0.0" value="<%= private_ip %>" id="private_ip_input">
+          <div class="input-group-append">
+            <span class="input-group-text">port:</span>
+            <input type="text" class="input-group-text" style="background-color: white; width:30%" name="port_input" id="port_input_main" value="<%= port %>">
+          </div>          
+        </div>        
+        <strong>Tableau Server @public_ip : </strong>
+        <p>Public ip or host name is used when client end using url with valid ticket to access resources/viz from Tableau Server. Therefore, your Tableau Server need to be accessable by client.</p>
+        <strong>Tableau Server @port : </strong>
+        <p>Default port for HTTP protocol is 80, HTTPS is 443.</p>
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+           <span class="input-group-text">Tableau server public ip/hostname:</span>
+           <button class="btn btn-outline-secondary" name="protocol_btn" value="<%= protocol %>" onclick="change_protocol()"><%= protocol %>://</button>    
+          </div>
+          <input type="text" class="form-control" placeholder="ex : tableau.example.com.tw or 52.124.0.0" id="public_ip_input" value="<%= public_ip %>">
+          <div class="input-group-append">
+            <span class="input-group-text">port:</span>
+            <input type="text" class="input-group-text" style="width:30%" name="port_input" id="port_input_mirror" value="<%= port %>" disabled>
+          </div>
+        </div>        
+        <button class="btn btn-success btn-sm" id="submit_config">Submit configuration</button>
+        <p class="text-secondary pt-2" id="config_result"></p>
+      </div>          
+    </div>
+    
+    <!-- Test Area -->
+    <div class="bg-white rounded border mt-4">
+      <div class="bg-light px-2 pt-2 rounded border-bottom">
+        <h4>Test Connection</h4>
+      </div>
+      <div class="p-4">
+        <strong>Step 1. Paste the URL of the viz you want to embed here & enter an username from Tableau Server.</strong>
+        <p>Visit Tableau Server web interface, navigate to the viz you want to emebed, click "Share" button on the right-top corner, copy Link of this viz and paste it on the following input block</p>
+        <p>Then, enter an username that is existed in Tableau Server and got enough privilege to access the viz.</p>
+        <img src="images/ts1.gif" class="img-thumbnail mb-3">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Username : </span>
+            <input type="text" class="input-group-text mr-2" style="background-color: white" id="username">
+            <span class="input-group-text">Link : </span>
+          </div>
+          <input type="text" class="form-control" placeholder="Paste the viz link here." id="viz_link">
+        </div>
+        <button class="btn btn-sm btn-dark mb-3" onclick="extract_link()">Extract from Link</button>
+        
+        <p>Below is the javascript object that we gonna sent to web server, then it will response an Trusted Ticket if nothing goes wrong. Take a look this object, only few information needed from the Link that we've just pasted earlier. And of course you can revise those parameters to access other vizes.</p>
+        <textarea class="form-control mb-3" id="ta_option" style="height: 110px; font-size: 12px"></textarea>        
+        
+        <strong>Step2. Get Trusted Ticket.</strong>
+        <p>The first thing to test is that whether we can get ticket throught the given <strong>@private_ip</strong> or not? </p>
+        <button class="btn btn-success btn-sm mb-3" id="test_btn" onclick="">Get Ticket!</button>
+        <div class="loader mb-3 ml-3" style="display: none" id="spinner"></div>
+        <div class="alert p-1" id="alert" style="display: none"></div>
+        <p class="mb-3">
+          <h6 style="display: inline">Trusted Ticket => </h6><h6 style="display: inline" id="ticket"></h6>
+        </p>
+        <p>if error appeared or you got a -1 ticket, most reasons are probably that this web server hasn't trusted by tableau server or blocked by firewall. Plz take a look at <a href="https://onlinehelp.tableau.com/current/server/en-us/trusted_auth_trustIP.htm">this documentation.</a> and trouble shooting page <a href="https://onlinehelp.tableau.com/current/server/en-us/trusted_auth_trouble_1return.htm">here.</a></p>
+        <p class="mb-3">The ticket you got will be redeemed the first time you used it, or it may expired at an certain period of time, default is 5 mins.</p>
+
+        <strong>Step3. Let's embed the viz!</strong>
+        <p>Link revealed below is an one time usage trusted url, you can use it to access Tableau Server without entering password, once you use it, it will be redeemed, other sessions cannot use the same trusted url to access Tableau Server again.</p>
+        <a id="trusted_url" style="font-size: 16px" target="_blank"></a>
+        <br>
+        <button class="btn btn-outline-dark btn-lg my-3" id="embed_btn">Or embed on this page ...</button>
+        <div id="viz_container" class="m-3 row"></div>
+      </div>
+    </div>
+
+    <!-- How to use this API Area -->
+
+    <div class="bg-white rounded border mt-4">
+      <div class="bg-light px-2 pt-2 rounded border-bottom">
+        <h4>How to use this API</h4>
+      </div>
+      <div class="p-4">
+        <strong>Step1. Fill blanks.</strong>
+        <p>There are some necessary parameters you got to know about:</p>        
+        <table class="table" style="width: 75%">
+            <thead class="thead-light">
+              <tr>
+                <th>#</th>
+                <th>Parameters</th>
+                <th>Value</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>0</th>
+                <td>Webserver ip/host</td>
+                <td><input type="text" id="ws_ip" value="localhost"></td>                
+                <td>This webserver's ip or host, default will be localhost/127.0.0.1</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>user_name</td>
+                <td><input type="text" id="user_name"></td>
+                <td>Tableau Server's vaild user name who has permission to access views.</td>
+              </tr>
+              <tr>
+                <th>2</th>
+                <td>target_site</td>
+                <td><input type="text" id="target_site" placeholder="optional"></td>
+                <td>Site ID on Tableau Server, if you are visiting default site, ignore it.</td>
+              </tr>
+              <tr>
+                <th>3</th>
+                <td>workbook</td>
+                <td><input type="text" id="workbook"></td>
+                <td>Workbook ID on Tableau Server.</td>
+              </tr>
+              <tr>
+                <th>4</th>
+                <td>sheet</td>
+                <td><input type="text" id="sheet"></td>
+                <td>Sheet name or Dashboard name on Tableau Server.</td>
+              </tr>            
+            </tbody>
+        </table>
+        <button class="btn btn-sm btn-dark mb-3" id="copy_btn">Copy those parameters from Test Zone.</button>
+        <br>
+        <button class="btn btn-lg btn-outline-success mb-3" id="final_btn">Generate web server URL.</button>
+        <br>
+        <h4><a href="" id="final_link" target="_blank"></a></h4>
+        <p>Use this URL to get Trusted URL for Tableau Server, it will dynamically generate Trusted Ticket for you.</p>
+        <div class="d-flex justify-content-center">
+          <strong>THE END</strong>
+        </div>
+        
+      </div>
+    </div>
+
+
+
+  </div>
+
+</body>
+</html>

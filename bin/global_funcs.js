@@ -10,6 +10,7 @@ exports.requestPromise = (req_options, req_body) => {
             res.on("end",() => resolve(data));
         });
         req.write(req_body);
+        req.on('error', (error) => reject(error));
         req.end();
     });
 }
