@@ -23,7 +23,7 @@ tabadmin start
 
 Additionally, there is one thing to know, **Tableau Trsuted Authentication** has a restriction as default, which is :
 * As default, if using this way to implement Single-Sign-On, user can only access views only. If you want to access whole **Tableau Server** resources, use ```tabadmin set``` to disable this restriction as follow :
-####This step is optional and not recommended.
+<span style="color:red">**This step is optional and not recommended.**</span>
 ```cmd
 tabadmin stop
 tabadmin set wgserver.unrestricted_ticket true
@@ -48,6 +48,6 @@ Listening at port : 8080
 
 ## Start using it!
 Open you browser, navigate to
-###http://localhost:8080/home/
+http://localhost:8080/home/
 It will looks like the this...
 ![demo](./public/images/demo.gif)
