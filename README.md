@@ -21,7 +21,7 @@ tsm pending-changes apply
 
 Additionally, there is one thing to know, **Tableau Trsuted Authentication** has a default restriction, which is :
 * if using this way to implement Single-Sign-On, user can only access views only. If you want to access whole **Tableau Server** resources, use ```tsm configuration set``` to disable this restriction as follows :
-#### <span style='color:red'>This step is optional and not recommended!</span>
+#### This step is optional and not recommended!
 ```cmd
 tsm configuration set --key wgserver.unrestricted_ticket --value true
 tsm pending-changes apply
