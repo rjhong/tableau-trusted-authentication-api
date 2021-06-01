@@ -11,7 +11,7 @@ This work is to simplify the [Trusted Authentication](https://onlinehelp.tableau
 
 ## Begin works
 
-First, you need to have a **Tableau Server**, then make som configurations on **Tableau Server** side. eg: tell **Tableau Server** to trusted your **Web Server** ...etc, you can either use TSM CLI or TSM web interface.
+First, you need to have a **Tableau Server**, then make some configurations on **Tableau Server** side. eg: tell **Tableau Server** to trusted your **Web Server** ...etc, you can either use TSM CLI or TSM web interface.
 ```cmd
 tsm authentication trusted configure -th "<trusted IP addresses or host names>"
 tsm pending-changes apply
@@ -20,8 +20,8 @@ tsm pending-changes apply
 
 
 Additionally, there is one thing to know, **Tableau Trsuted Authentication** has a default restriction, which is :
-* if using this way to implement Single-Sign-On, user can only access views only. If you want to access whole **Tableau Server** resources, use ```tsm configuration set``` to disable this restriction as follow :
-#### This step is optional and not recommended.
+* if using this way to implement Single-Sign-On, user can only access views only. If you want to access whole **Tableau Server** resources, use ```tsm configuration set``` to disable this restriction as follows :
+#### <span style='color:red'>This step is optional and not recommended!</span>
 ```cmd
 tsm configuration set --key wgserver.unrestricted_ticket --value true
 tsm pending-changes apply
